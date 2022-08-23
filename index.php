@@ -1,11 +1,11 @@
 <?
 /*Гостеая книга*/
+header("Content-type: text/html; charset=utf-8");
 error_reporting(-1);
-
 require_once 'funcs.php';
+require_once 'connect.php';
 
 define("GB", "guestbook.txt");/*название файла для гостевой книги*/
-
 
 if(!empty($_POST)) {
   save_mess();
@@ -16,35 +16,41 @@ if(!empty($_POST)) {
 
 /*Считываем данные*/
 $messages = get_mess();
-$messages = arry_mess($messages);
 
-echo '<pre>';
-print_r($messages);
-echo '</pre>';
+//printArr($messages);
 ?>
 
-<form method="post" action="">
-  <p>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/> 
+  <title>Гостевая книга</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+
+
+<form method="post" class="gb_form">
+  <p class="gb_form-block text">
     <label for="name_guest">Ваше имя:</label>
     <input type="text" name="name_guest" id="name_guest">
   </p>
-  <p>
+  <p class="gb_form-block">
     <label for="text_guest">Текст: </label>
     <textarea name="text_guest" id="text_guest"></textarea>
   </p>
-  <button type="submit">Написать</button>
+  <button type="submit" class="btn">Написать</button>
 </form>
 
-
+<div class="messages__block">
 <?if(!empty($messages)): ?>
   <?foreach($messages as $value): ?>
       <!--разбиваем наш массив на имя, текст и дату-->
-      <?$messages = getFotmatMessages($value)?>
-  
-      <div class="messages">
-          <p>Автор: <?=htmlspecialchars($messages[0])?> | Дата: <?=$messages[2]?></p>
-          <p>Сообщение: <?=htmlspecialchars($messages[1])?></p>
+      <div class="messages__inner">
+          <p><span class="messages__inner-title">Автор:</span> <?=$value['name']?></p>
+          <p><span class="messages__inner-title">Сообщение:</span> <?=htmlspecialchars($value['text'])?></p>
+          <p><?=$value['date']?></p>
       </div>
       
   <?endforeach?>
 <?endif?>
+</body>
